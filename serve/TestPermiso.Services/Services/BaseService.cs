@@ -15,6 +15,8 @@ namespace GenericApi.Services.Services
     public interface IBaseService<TEntity, TDto>
     {
         Task<IEntityOperationResult<TDto>> AddAsync(TDto dto);
+        Task<IEntityOperationResult<TDto>> UpdateAsync(int id, TDto dto);
+        Task<IEntityOperationResult<TDto>> DeleteByIdAsync(int id);
     }
     public class BaseService<TEntity, TDto> : IBaseService<TEntity, TDto>
         where TEntity : class, IBase
@@ -29,7 +31,7 @@ namespace GenericApi.Services.Services
             _mapper = mapper;
             _validator = validator;
         }
-
+        
         public virtual async Task<IEntityOperationResult<TDto>> AddAsync(TDto dto)
         {
             var validationResult = _validator.Validate(dto);
@@ -40,6 +42,41 @@ namespace GenericApi.Services.Services
             var entityResult = await _repository.Add(entity);
 
             _mapper.Map(entityResult, dto);
+
+            var result = dto.ToOperationResult();
+            return result;
+        }
+        public virtual async Task<IEntityOperationResult<TDto>> UpdateAsync(int id, TDto dto)
+        {
+            var validationResult = _validator.Validate(dto);
+
+            if (validationResult.IsValid is false)
+                return validationResult.ToOperationResult<TDto>();
+
+            var entity = await _repository.Get(id);
+
+            if (entity is null)
+                return null;
+
+            _mapper.Map(dto, entity);
+
+            entity = await _repository.Update(entity);
+            _mapper.Map(entity, dto);
+
+            var result = dto.ToOperationResult();
+
+            return result;
+        }
+        public virtual async Task<IEntityOperationResult<TDto>> DeleteByIdAsync(int id)
+        {
+            var entity = await _repository.Get(id);
+
+            if (entity is null)
+                return null;
+
+            entity = await _repository.Delete(id);
+
+            var dto = _mapper.Map<TDto>(entity);
 
             var result = dto.ToOperationResult();
             return result;
