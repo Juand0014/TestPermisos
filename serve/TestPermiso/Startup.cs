@@ -1,5 +1,7 @@
 ﻿using GenericApi.Bl.Config;
 using GenericApi.Config;
+using GenericApi.Model.IoC;
+using GenericApi.Services.IoC;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -50,9 +52,16 @@ namespace TestPermiso
             #region API Libraries
 
             services.ConfigOData();
+            services.ConfigSwagger();
 
             #endregion
 
+            #region App Registries
+
+            services.AddModelRegistry();
+            services.AddServiceRegistry();
+
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,11 +72,15 @@ namespace TestPermiso
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseAppSwagger();
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseCors("MainPolicy");
+
+            app.UseMvc(routeBuilder => routeBuilder.UseAppOData());
 
         }
     }
