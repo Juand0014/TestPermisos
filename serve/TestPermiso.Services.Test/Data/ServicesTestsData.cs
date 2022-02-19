@@ -7,6 +7,8 @@ namespace Dallas.Services.Tests.Data
 {
     public class ServicesTestsData
     {
+        #region Permissions
+
         public readonly Permissions _permissions = new Permissions
         {
             Name = "Juan",
@@ -21,5 +23,21 @@ namespace Dallas.Services.Tests.Data
             LastName = "Martinez",
             DatePermission = DateTime.Now
         };
+
+        #endregion
+
+        #region PermissionType
+
+        public readonly PermissionType _permissionType = new PermissionType
+        {
+            Description = "VeryGood"
+        };
+
+        public readonly PermissionType _permissionType2 = new PermissionType
+        {
+            Description = "VeryBad"
+        };
+
+        #endregion
     }
 }
