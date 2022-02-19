@@ -14,6 +14,10 @@ namespace GenericApi.Services.Services
 {
     public interface IBaseService<TEntity, TDto>
     {
+        Task<IEnumerable<TDto>> ProjectToDto(IQueryable<TEntity> query);
+        IQueryable<TEntity> AsQuery();
+        Task<IEnumerable<TDto>> GetAllAsync();
+        Task<TDto> GetByIdAsync(int id);
         Task<IEntityOperationResult<TDto>> AddAsync(TDto dto);
         Task<IEntityOperationResult<TDto>> UpdateAsync(int id, TDto dto);
         Task<IEntityOperationResult<TDto>> DeleteByIdAsync(int id);
@@ -31,7 +35,28 @@ namespace GenericApi.Services.Services
             _mapper = mapper;
             _validator = validator;
         }
-        
+
+        public virtual async Task<IEnumerable<TDto>> ProjectToDto(IQueryable<TEntity> query)
+        {
+            var list = query.ProjectTo<TDto>(_mapper.ConfigurationProvider);
+            return await list.ToListAsync();
+        }
+        public virtual IQueryable<TEntity> AsQuery()
+        {
+            return _repository.Query();
+        }
+        public virtual async Task<IEnumerable<TDto>> GetAllAsync()
+        {
+            var result = await _repository.Query().ToListAsync();
+            var dtos = _mapper.Map<IEnumerable<TDto>>(result);
+            return dtos;
+        }
+        public virtual async Task<TDto> GetByIdAsync(int id)
+        {
+            var entity = await _repository.Get(id);
+            var dto = _mapper.Map<TDto>(entity);
+            return dto;
+        }
         public virtual async Task<IEntityOperationResult<TDto>> AddAsync(TDto dto)
         {
             var validationResult = _validator.Validate(dto);
