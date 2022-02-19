@@ -11,7 +11,8 @@ namespace GenericApi.Model.IoC
     {
         public static void AddModelRegistry(this IServiceCollection services)
         {
-            services.AddScoped<IExampleRepository, ExampleRepository>();
+            services.AddScoped<IPermissionsRepository, PermissionsRepository>();
+            services.AddScoped<IPermissionTypeRepository, PermissionTypeRepository>();
         }
     }
 }

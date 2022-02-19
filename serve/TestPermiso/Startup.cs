@@ -1,9 +1,4 @@
-﻿using TestPermiso.Bl.Config;
-using TestPermiso.Config;
-using TestPermiso.Core.Settings;
-using TestPermiso.Model.IoC;
-using TestPermiso.Services.IoC;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
