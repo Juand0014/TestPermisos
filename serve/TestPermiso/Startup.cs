@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using GenericApi.Bl.Config;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,19 +17,38 @@ namespace TestPermiso
 
         public void ConfigureServices(IServiceCollection services)
         {
+            #region CORS
+
             services.AddCors(options =>
             {
                 options.AddPolicy("MainPolicy",
-                    builder =>
-                    {
-                        builder
-                            .AllowAnyHeader()
-                            .AllowAnyMethod()
-                            .AllowCredentials();
-                    });
+                      builder =>
+                      {
+                          builder
+                                 .AllowAnyHeader()
+                                 .AllowAnyMethod()
+                                 .AllowCredentials();
+
+                          //TODO: remove this line for production
+                          builder.SetIsOriginAllowed(x => true);
+                      });
             });
+
+            #endregion
+
+            #region External Dependencies
+
+            services.ConfigSqlServerDbContext(Configuration.GetConnectionString("DefaultConnection"));
+            services.AddControllers(options => options.EnableEndpointRouting = false)
+                .ConfigFluentValidation();
+            services.ConfigAutoMapper();
+            services.ConfigSerilog();
+
+            #endregion
+
         }
 
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -37,8 +57,11 @@ namespace TestPermiso
             }
 
             app.UseHttpsRedirection();
+
             app.UseRouting();
+
             app.UseCors("MainPolicy");
+
         }
     }
 }
