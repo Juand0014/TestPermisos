@@ -16,18 +16,12 @@ namespace GenericApi.Config
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = "WorkShop API",
-                    Description = "A simple example ASP.NET Core Web API"
+                    Title = "PermissionsTest API",
                     Contact = new OpenApiContact
                     {
-                        Name = "Shayne Boyer",
-                        Email = string.Empty,
+                        Name = "Juan David Matos",
+                        Email = "juand0014@hotmail.com",
                         Url = new Uri("https://www.linkedin.com/in/juan-david-matos-553a73204/"),
-                    },
-                    License = new OpenApiLicense
-                    {
-                        Name = "Use under LICX",
-                        Url = new Uri("https://example.com/license"),
                     }
                 });
             });
@@ -40,7 +34,7 @@ namespace GenericApi.Config
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "WorkShop API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "PermissionsTest API V1");
             });
             return app;
         }

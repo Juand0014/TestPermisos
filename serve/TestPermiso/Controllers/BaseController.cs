@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace GenericApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class BaseController<TEntity,TDto> : ControllerBase
         where TEntity : IBase 
         where TDto : IBaseDto
